@@ -7,42 +7,61 @@ import (
 
 const USD_EUR = 0.9
 const USD_RUB = 80
-const EUR_RUB = 91
+const EUR_RUB = USD_RUB / USD_EUR
 
 func main() {
 	for {
-		sourceСurrency, amount, targetСurrency, err := getUserValues()
+		sourceСurrency, err := getUserSourceСurrency()
 		if err != nil {
 			fmt.Printf("%s\n", err)
 			continue
 		}
+
+		amount, err := getUserAmount()
+		if err != nil {
+			fmt.Printf("%s\n", err)
+			continue
+		}
+
+		targetСurrency, err := getUserTargetСurrency(sourceСurrency)
+		if err != nil {
+			fmt.Printf("%s\n", err)
+			continue
+		}
+
 		fmt.Printf("Вы меняете %.0f %s на %s \n", amount, sourceСurrency, targetСurrency)
 		fmt.Printf("После обмена получите %.0f %s \n", changeMoney(amount, sourceСurrency, targetСurrency), targetСurrency)
 	}
 }
 
-func getUserValues() (string, float64, string, error) {
-	var amount float64
-	var sourceСurrency, targetСurrency string
-
+func getUserSourceСurrency() (string, error) {
+	var sourceСurrency string
 	fmt.Print("Введите какую валюту хотите поменять (USD, EUR, RUB): ")
 	fmt.Scan(&sourceСurrency)
 	if sourceСurrency != "USD" && sourceСurrency != "EUR" && sourceСurrency != "RUB" {
-		return "", 0, "", errors.New("Исходная Валюта неправильно задана")
+		return "", errors.New("Исходная Валюта неправильно задана")
 	}
+	return sourceСurrency, nil
+}
 
+func getUserAmount() (float64, error) {
+	var amount float64
 	fmt.Print("Введите сколько хотите поменять: ")
 	fmt.Scan(&amount)
 	if amount <= 0 {
-		return "", 0, "", errors.New("Количество задано неверно")
+		return 0, errors.New("Количество задано неверно")
 	}
+	return amount, nil
+}
 
+func getUserTargetСurrency(sourceСurrency string) (string, error) {
+	var targetСurrency string
 	fmt.Printf("Введите какую валюту хотите получить после обмена %s: ", getValidCurrency(sourceСurrency))
 	fmt.Scan(&targetСurrency)
 	if !checkTargetCurrency(sourceСurrency, targetСurrency) {
-		return "", 0, "", errors.New("Целевая валюта задана неверно")
+		return "", errors.New("Целевая валюта задана неверно")
 	}
-	return sourceСurrency, amount, targetСurrency, nil
+	return targetСurrency, nil
 }
 
 func getValidCurrency(sourceСurrency string) string {
@@ -84,7 +103,7 @@ func changeMoney(amount float64, sourceСurrency string, targetСurrency string)
 	case sourceСurrency == "RUB" && targetСurrency == "USD":
 		return amount / USD_RUB
 	case sourceСurrency == "RUB" && targetСurrency == "EUR":
-		return amount * EUR_RUB
+		return amount / EUR_RUB
 	default:
 		return 0
 	}
