@@ -30,6 +30,10 @@ func main() {
 		}
 
 		fmt.Printf("Вы меняете %.0f %s на %s \n", amount, sourceСurrency, targetСurrency)
+
+		ehchangeRates := map[string]float64{}
+		calcRates(ehchangeRates)
+
 		fmt.Printf("После обмена получите %.0f %s \n", changeMoney(amount, sourceСurrency, targetСurrency), targetСurrency)
 	}
 }
@@ -88,6 +92,15 @@ func checkTargetCurrency(sourceСurrency, targetСurrency string) bool {
 	default:
 		return false
 	}
+}
+
+func calcRates(ehchangeRates map[string]float64) {
+	ehchangeRates["USD_EUR"] = USD_EUR
+	ehchangeRates["USD_RUB"] = USD_RUB
+	ehchangeRates["EUR_USD"] = 1 / USD_EUR
+	ehchangeRates["EUR_RUB"] = EUR_RUB
+	ehchangeRates["RUB_USD"] = 1 / USD_RUB
+	ehchangeRates["RUB_EUR"] = 1 / EUR_RUB
 }
 
 func changeMoney(amount float64, sourceСurrency string, targetСurrency string) float64 {
