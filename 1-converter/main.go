@@ -34,7 +34,7 @@ func main() {
 
 		fmt.Printf("Вы меняете %.0f %s на %s \n", amount, sourceСurrency, targetСurrency)
 
-		afterChange := changeMoney(amount, sourceСurrency, targetСurrency, exchangeRates)
+		afterChange := changeMoney(amount, sourceСurrency, targetСurrency, &exchangeRates)
 		fmt.Printf("После обмена получите %.2f %s \n", afterChange, targetСurrency)
 	}
 }
@@ -104,6 +104,6 @@ func calcRates(exchangeRates *map[string]float64) {
 	(*exchangeRates)["RUB_EUR"] = 1 / EUR_RUB
 }
 
-func changeMoney(amount float64, sourceСurrency string, targetСurrency string, exchangeRates map[string]float64) float64 {
-	return amount * exchangeRates[sourceСurrency+"_"+targetСurrency]
+func changeMoney(amount float64, sourceСurrency string, targetСurrency string, exchangeRates *map[string]float64) float64 {
+	return amount * (*exchangeRates)[sourceСurrency+"_"+targetСurrency]
 }
