@@ -11,7 +11,7 @@ const EUR_RUB = USD_RUB / USD_EUR
 
 func main() {
 	exchangeRates := map[string]float64{}
-	calcRates(exchangeRates)
+	calcRates(&exchangeRates)
 
 	for {
 		sourceСurrency, err := getUserSourceСurrency()
@@ -95,13 +95,13 @@ func checkTargetCurrency(sourceСurrency, targetСurrency string) bool {
 	}
 }
 
-func calcRates(exchangeRates map[string]float64) {
-	exchangeRates["USD_EUR"] = USD_EUR
-	exchangeRates["USD_RUB"] = USD_RUB
-	exchangeRates["EUR_USD"] = 1 / USD_EUR
-	exchangeRates["EUR_RUB"] = EUR_RUB
-	exchangeRates["RUB_USD"] = 1 / USD_RUB
-	exchangeRates["RUB_EUR"] = 1 / EUR_RUB
+func calcRates(exchangeRates *map[string]float64) {
+	(*exchangeRates)["USD_EUR"] = USD_EUR
+	(*exchangeRates)["USD_RUB"] = USD_RUB
+	(*exchangeRates)["EUR_USD"] = 1 / USD_EUR
+	(*exchangeRates)["EUR_RUB"] = EUR_RUB
+	(*exchangeRates)["RUB_USD"] = 1 / USD_RUB
+	(*exchangeRates)["RUB_EUR"] = 1 / EUR_RUB
 }
 
 func changeMoney(amount float64, sourceСurrency string, targetСurrency string, exchangeRates map[string]float64) float64 {
